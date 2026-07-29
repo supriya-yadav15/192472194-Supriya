@@ -1,0 +1,24 @@
+import cv2
+
+# Read the image
+img = cv2.imread("flower.jpeg")
+
+if img is None:
+    print("Image not found!")
+    exit()
+
+# Get original size
+height, width = img.shape[:2]
+
+# Scale the image
+bigger = cv2.resize(img, (width * 2, height * 2))
+smaller = cv2.resize(img, (width // 2, height // 2))
+
+# Save the output
+cv2.imwrite("bigger_image.jpg", bigger)
+cv2.imwrite("smaller_image.jpg", smaller)
+
+print("Original Size :", width, "x", height)
+print("Bigger Size  :", bigger.shape[1], "x", bigger.shape[0])
+print("Smaller Size :", smaller.shape[1], "x", smaller.shape[0])
+print("Scaling completed successfully!")
