@@ -1,0 +1,39 @@
+import cv2
+import numpy as np
+
+# Read the input image
+img = cv2.imread("flower.jpeg")
+
+# Check if image exists
+if img is None:
+    print("Error: flower.jpeg not found!")
+    exit()
+
+# Resize image
+img = cv2.resize(img, (500, 500))
+
+# Source points
+pts1 = np.float32([
+    [50, 50],
+    [200, 50],
+    [50, 200]
+])
+
+# Destination points
+pts2 = np.float32([
+    [10, 100],
+    [200, 50],
+    [100, 250]
+])
+
+# Get Affine Transformation Matrix
+matrix = cv2.getAffineTransform(pts1, pts2)
+
+# Apply Affine Transformation
+result = cv2.warpAffine(img, matrix, (500, 500))
+
+# Save the output image
+cv2.imwrite("affine_output.jpg", result)
+
+print("Affine Transformation completed successfully.")
+print("Output saved as affine_output.jpg")
