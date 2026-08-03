@@ -1,0 +1,41 @@
+import cv2
+import numpy as np
+
+# Read input image
+img = cv2.imread("flower.jpeg")
+
+# Check if image exists
+if img is None:
+    print("Error: flower.jpeg not found!")
+    exit()
+
+# Resize image
+img = cv2.resize(img, (500, 500))
+
+# Source points
+pts1 = np.float32([
+    [50, 50],
+    [450, 50],
+    [50, 450],
+    [450, 450]
+])
+
+# Destination points
+pts2 = np.float32([
+    [0, 0],
+    [500, 0],
+    [100, 500],
+    [400, 500]
+])
+
+# Perspective transformation matrix
+matrix = cv2.getPerspectiveTransform(pts1, pts2)
+
+# Apply transformation
+result = cv2.warpPerspective(img, matrix, (500, 500))
+
+# Save output
+cv2.imwrite("perspective_output.jpg", result)
+
+print("Perspective Transformation completed successfully.")
+print("Output saved as perspective_output.jpg")
