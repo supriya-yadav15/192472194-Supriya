@@ -1,0 +1,57 @@
+import cv2
+import numpy as np
+
+# Open the input video
+cap = cv2.VideoCapture("sample.mp4.mp4")
+
+# Check if the video is opened successfully
+if not cap.isOpened():
+    print("Error: Unable to open sample.mp4.mp4")
+    exit()
+
+# Get video properties
+width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+fps = cap.get(cv2.CAP_PROP_FPS)
+
+# Create output video
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+out = cv2.VideoWriter("perspective_video.mp4", fourcc, fps, (width, height))
+
+while True:
+    ret, frame = cap.read()
+
+    if not ret:
+        break
+
+    # Define source points
+    pts1 = np.float32([
+        [50, 50],
+        [width - 50, 50],
+        [50, height - 50],
+        [width - 50, height - 50]
+    ])
+
+    # Define destination points
+    pts2 = np.float32([
+        [0, 0],
+        [width, 0],
+        [100, height],
+        [width - 100, height]
+    ])
+
+    # Compute perspective transformation matrix
+    matrix = cv2.getPerspectiveTransform(pts1, pts2)
+
+    # Apply perspective transformation
+    transformed = cv2.warpPerspective(frame, matrix, (width, height))
+
+    # Write transformed frame to output video
+    out.write(transformed)
+
+# Release resources
+cap.release()
+out.release()
+
+print("Perspective Transformation completed successfully!")
+print("Output video saved as perspective_video.mp4")
