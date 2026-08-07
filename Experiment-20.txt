@@ -1,0 +1,27 @@
+import cv2
+import numpy as np
+
+# Read the input image
+img = cv2.imread("flower.jpeg")
+
+# Check whether image is loaded
+if img is None:
+    print("Error: flower.jpeg not found!")
+    exit()
+
+# Define Laplacian mask with negative center coefficient
+kernel = np.array([[0, 1, 0],
+                   [1, -4, 1],
+                   [0, 1, 0]])
+
+# Apply the filter
+laplacian = cv2.filter2D(img, -1, kernel)
+
+# Sharpen the image
+sharpened = cv2.subtract(img, laplacian)
+
+# Save the output image
+cv2.imwrite("laplacian_negative_output.jpg", sharpened)
+
+print("Image sharpening using Laplacian Negative Center completed successfully.")
+print("Output saved as laplacian_negative_output.jpg")

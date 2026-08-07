@@ -1,0 +1,41 @@
+import cv2
+import numpy as np
+
+# Read the input image
+img = cv2.imread("flower.jpeg")
+
+# Check whether image is loaded
+if img is None:
+    print("Error: flower.jpeg not found!")
+    exit()
+
+# Resize image
+img = cv2.resize(img, (500, 500))
+
+# Source points
+src_points = np.float32([
+    [50, 50],
+    [450, 50],
+    [450, 450],
+    [50, 450]
+])
+
+# Destination points
+dst_points = np.float32([
+    [100, 100],
+    [400, 50],
+    [450, 450],
+    [50, 400]
+])
+
+# Compute Homography Matrix
+H, status = cv2.findHomography(src_points, dst_points)
+
+# Apply Homography Transformation
+output = cv2.warpPerspective(img, H, (500, 500))
+
+# Save output image
+cv2.imwrite("homography_output.jpg", output)
+
+print("Homography Transformation completed successfully.")
+print("Output saved as homography_output.jpg")

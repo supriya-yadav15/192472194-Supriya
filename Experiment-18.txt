@@ -1,0 +1,25 @@
+import cv2
+import numpy as np
+
+# Read the input image
+img = cv2.imread("flower.jpeg")
+
+# Check whether image is loaded
+if img is None:
+    print("Error: flower.jpeg not found!")
+    exit()
+
+# Convert image to grayscale
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+# Apply Sobel Edge Detection along Y-axis
+sobel_y = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)
+
+# Convert to 8-bit image
+sobel_y = cv2.convertScaleAbs(sobel_y)
+
+# Save the output image
+cv2.imwrite("sobel_y_output.jpg", sobel_y)
+
+print("Sobel Y Edge Detection completed successfully.")
+print("Output saved as sobel_y_output.jpg")

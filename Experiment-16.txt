@@ -1,0 +1,21 @@
+import cv2
+
+# Read the input image
+img = cv2.imread("flower.jpeg")
+
+# Check whether image is loaded
+if img is None:
+    print("Error: flower.jpeg not found!")
+    exit()
+
+# Convert image to grayscale
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+# Apply Canny Edge Detection
+edges = cv2.Canny(gray, 100, 200)
+
+# Save the output image
+cv2.imwrite("canny_output.jpg", edges)
+
+print("Canny Edge Detection completed successfully.")
+print("Output saved as canny_output.jpg")
