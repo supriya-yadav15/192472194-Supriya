@@ -1,0 +1,35 @@
+import cv2
+import numpy as np
+
+# Read input image
+img = cv2.imread("flower.jpeg")
+
+if img is None:
+    print("Error: flower.jpeg not found!")
+    exit()
+
+# Convert to grayscale
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+# Calculate gradients
+gx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)
+gy = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)
+
+# Calculate gradient magnitude
+gradient = cv2.magnitude(gx.astype(np.float32), gy.astype(np.float32))
+
+# Normalize gradient
+gradient = cv2.normalize(gradient, None, 0, 255, cv2.NORM_MINMAX)
+gradient = gradient.astype(np.uint8)
+
+# Convert gradient to color
+gradient_color = cv2.cvtColor(gradient, cv2.COLOR_GRAY2BGR)
+
+# Add gradient mask to original image
+sharpened = cv2.addWeighted(img, 1.0, gradient_color, 0.5, 0)
+
+# Save output
+cv2.imwrite("gradient_mask_output.jpg", sharpened)
+
+print("Gradient masking completed successfully.")
+print("Output saved as gradient_mask_output.jpg")

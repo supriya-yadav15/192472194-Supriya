@@ -1,0 +1,21 @@
+import cv2
+
+# Read input image
+img = cv2.imread("flower.jpeg")
+
+if img is None:
+    print("Error: flower.jpeg not found!")
+    exit()
+
+# Create blurred image
+blur = cv2.GaussianBlur(img, (5, 5), 0)
+
+# High-Boost filtering
+A = 2.0
+high_boost = cv2.addWeighted(img, A, blur, -(A - 1), 0)
+
+# Save output
+cv2.imwrite("high_boost_output.jpg", high_boost)
+
+print("High-Boost sharpening completed successfully.")
+print("Output saved as high_boost_output.jpg")

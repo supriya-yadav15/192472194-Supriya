@@ -1,0 +1,39 @@
+import cv2
+
+# Read input image
+img = cv2.imread("flower.jpeg")
+
+if img is None:
+    print("Error: flower.jpeg not found!")
+    exit()
+
+# Get image dimensions
+height, width = img.shape[:2]
+
+print("Image size:", width, "x", height)
+
+# Select a small crop area
+crop_size = min(width, height) // 4
+
+if crop_size < 10:
+    print("Error: Image is too small!")
+    exit()
+
+# Crop the image
+crop = img[0:crop_size, 0:crop_size]
+
+# Copy the cropped part
+copy = crop.copy()
+
+# Calculate a safe paste position
+x = width - crop_size
+y = height - crop_size
+
+# Paste copied image
+img[y:y+crop_size, x:x+crop_size] = copy
+
+# Save output
+cv2.imwrite("crop_copy_paste_output.jpg", img)
+
+print("Cropping, copying and pasting completed successfully.")
+print("Output saved as crop_copy_paste_output.jpg")

@@ -1,0 +1,36 @@
+import cv2
+
+# Read input image
+img = cv2.imread("flower.jpeg")
+
+if img is None:
+    print("Error: flower.jpeg not found!")
+    exit()
+
+# Watermark text
+text = "SUPRIYA"
+
+# Position of watermark
+position = (30, 50)
+
+# Font settings
+font = cv2.FONT_HERSHEY_SIMPLEX
+font_scale = 1
+thickness = 2
+
+# Add watermark
+cv2.putText(
+    img,
+    text,
+    position,
+    font,
+    font_scale,
+    (255, 255, 255),
+    thickness
+)
+
+# Save output
+cv2.imwrite("watermarked_output.jpg", img)
+
+print("Watermark added successfully.")
+print("Output saved as watermarked_output.jpg")
