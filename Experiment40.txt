@@ -1,0 +1,69 @@
+import cv2
+import os
+
+# Create output folder
+os.makedirs("outputs", exist_ok=True)
+
+# Input image
+input_image = "vehicle.jpeg"
+
+image = cv2.imread(input_image)
+
+if image is None:
+    print("Error: vehicle.jpeg not found!")
+    exit()
+
+# Convert to grayscale
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# Threshold
+_, threshold = cv2.threshold(gray, 120, 255, cv2.THRESH_BINARY)
+
+# Find contours
+contours, _ = cv2.findContours(
+    threshold,
+    cv2.RETR_EXTERNAL,
+    cv2.CHAIN_APPROX_SIMPLE
+)
+
+count = 0
+
+# Draw rectangles and extract objects
+for contour in contours:
+
+    area = cv2.contourArea(contour)
+
+    if area > 1000:
+
+        x, y, w, h = cv2.boundingRect(contour)
+
+        # Draw rectangle
+        cv2.rectangle(
+            image,
+            (x, y),
+            (x + w, y + h),
+            (0, 255, 0),
+            2
+        )
+
+        count += 1
+
+        # Extract object
+        object_image = image[y:y+h, x:x+w]
+
+        # Save extracted object
+        object_path = f"outputs/exp40_object_{count}.jpg"
+        cv2.imwrite(object_path, object_image)
+
+# Save final image
+output_path = "outputs/exp40_rectangle_extract.jpg"
+cv2.imwrite(output_path, image)
+
+print("----------------------------------------")
+print("Experiment 40: Rectangle and Object Extraction")
+print("----------------------------------------")
+print("Input Image :", input_image)
+print("Objects Extracted :", count)
+print("Output Image :", output_path)
+print("Experiment 40 completed successfully.")
+print("----------------------------------------")

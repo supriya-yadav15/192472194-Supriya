@@ -1,0 +1,76 @@
+import cv2
+import os
+import urllib.request
+
+# Create output folder
+os.makedirs("outputs", exist_ok=True)
+
+# Input image
+input_image = "face.jpeg"
+
+image = cv2.imread(input_image)
+
+if image is None:
+    print("Error: face.jpeg not found!")
+    exit()
+
+# YuNet face detection model
+model = "face_detection_yunet_2023mar.onnx"
+
+if not os.path.exists(model):
+    print("Downloading face detection model...")
+    url = "https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx"
+    urllib.request.urlretrieve(url, model)
+
+# Create face detector
+detector = cv2.FaceDetectorYN.create(
+    model,
+    "",
+    (image.shape[1], image.shape[0]),
+    0.6,
+    0.3,
+    5000
+)
+
+# Detect faces
+_, faces = detector.detect(image)
+
+count = 0
+
+if faces is not None:
+    for face in faces:
+        x, y, w, h = face[:4].astype(int)
+
+        cv2.rectangle(
+            image,
+            (x, y),
+            (x + w, y + h),
+            (0, 255, 0),
+            2
+        )
+
+        count += 1
+
+        cv2.putText(
+            image,
+            "Face",
+            (x, y - 10),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (0, 255, 0),
+            2
+        )
+
+# Save output
+output_path = "outputs/exp38_face_detection.jpg"
+
+cv2.imwrite(output_path, image)
+
+print("----------------------------------------")
+print("Experiment 38: Face Detection")
+print("----------------------------------------")
+print("Input Image :", input_image)
+print("Faces Found :", count)
+print("Output Image:", output_path)
+print("Experiment 38 completed successfully.")
+print("----------------------------------------")

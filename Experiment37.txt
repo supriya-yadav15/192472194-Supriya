@@ -1,0 +1,83 @@
+import cv2
+import os
+
+# -----------------------------------------
+# Create output folder
+# -----------------------------------------
+output_folder = "outputs"
+os.makedirs(output_folder, exist_ok=True)
+
+# -----------------------------------------
+# Input video
+# -----------------------------------------
+input_video = "sample.mp4.mp4"
+
+# Open video
+cap = cv2.VideoCapture(input_video)
+
+if not cap.isOpened():
+    print("Error: sample.mp4.mp4 not found!")
+    exit()
+
+# -----------------------------------------
+# Get video properties
+# -----------------------------------------
+fps = cap.get(cv2.CAP_PROP_FPS)
+width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+if fps <= 0:
+    fps = 30
+
+# -----------------------------------------
+# Read all frames
+# -----------------------------------------
+frames = []
+
+while True:
+    ret, frame = cap.read()
+
+    if not ret:
+        break
+
+    frames.append(frame)
+
+cap.release()
+
+if len(frames) == 0:
+    print("Error: No frames found in video.")
+    exit()
+
+# -----------------------------------------
+# Create reverse video
+# -----------------------------------------
+output_path = "outputs/exp37_reverse_video.mp4"
+
+fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+
+out = cv2.VideoWriter(
+    output_path,
+    fourcc,
+    fps,
+    (width, height)
+)
+
+# -----------------------------------------
+# Write frames in reverse order
+# -----------------------------------------
+for frame in reversed(frames):
+    out.write(frame)
+
+out.release()
+
+# -----------------------------------------
+# Display result
+# -----------------------------------------
+print("----------------------------------------")
+print("Experiment 37: Video in Reverse Mode")
+print("----------------------------------------")
+print("Input Video :", input_video)
+print("Output Video:", output_path)
+print("Total Frames:", len(frames))
+print("Experiment 37 completed successfully.")
+print("----------------------------------------")

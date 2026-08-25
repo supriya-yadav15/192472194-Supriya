@@ -1,0 +1,56 @@
+import cv2
+import numpy as np
+import os
+
+# -----------------------------------------
+# Create output folder automatically
+# -----------------------------------------
+output_folder = "outputs"
+os.makedirs(output_folder, exist_ok=True)
+
+# -----------------------------------------
+# Read input image
+# -----------------------------------------
+image = cv2.imread("flower.jpeg", cv2.IMREAD_GRAYSCALE)
+
+if image is None:
+    print("Error: flower.jpeg not found!")
+    exit()
+
+# -----------------------------------------
+# Define morphological kernel
+# -----------------------------------------
+kernel = np.ones((5, 5), np.uint8)
+
+# -----------------------------------------
+# Apply Closing
+# Closing = Dilation followed by Erosion
+# -----------------------------------------
+closing = cv2.morphologyEx(
+    image,
+    cv2.MORPH_CLOSE,
+    kernel
+)
+
+# -----------------------------------------
+# Save output image
+# -----------------------------------------
+output_path = "outputs/exp32_closing.jpg"
+
+success = cv2.imwrite(output_path, closing)
+
+# -----------------------------------------
+# Display result information
+# -----------------------------------------
+print("----------------------------------------")
+print("Experiment 32: Morphological Closing")
+print("----------------------------------------")
+print("Input Image : flower.jpeg")
+print("Output Image:", output_path)
+
+if success:
+    print("Experiment 32 completed successfully.")
+else:
+    print("Error: Output image was not saved.")
+
+print("----------------------------------------")

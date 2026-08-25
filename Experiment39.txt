@@ -1,0 +1,77 @@
+import cv2
+import os
+
+# Create output folder
+os.makedirs("outputs", exist_ok=True)
+
+# Input image
+input_image = "vehicle.jpeg"
+
+image = cv2.imread(input_image)
+
+if image is None:
+    print("Error: vehicle.jpeg not found!")
+    exit()
+
+# Convert to grayscale
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# Detect edges
+edges = cv2.Canny(gray, 80, 150)
+
+# Find contours
+contours, _ = cv2.findContours(
+    edges,
+    cv2.RETR_EXTERNAL,
+    cv2.CHAIN_APPROX_SIMPLE
+)
+
+count = 0
+
+# Detect large objects
+for contour in contours:
+    area = cv2.contourArea(contour)
+
+    if area > 1000:
+        x, y, w, h = cv2.boundingRect(contour)
+
+        # Ignore very small or very large regions
+        if w > 40 and h > 30:
+            cv2.rectangle(
+                image,
+                (x, y),
+                (x + w, y + h),
+                (0, 255, 0),
+                2
+            )
+
+            cv2.putText(
+                image,
+                "Vehicle",
+                (x, max(y - 10, 20)),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.7,
+                (0, 255, 0),
+                2
+            )
+
+            count += 1
+
+# Save output
+output_path = "outputs/exp39_vehicle_detection.jpg"
+
+success = cv2.imwrite(output_path, image)
+
+print("----------------------------------------")
+print("Experiment 39: Vehicle Detection")
+print("----------------------------------------")
+print("Input Image :", input_image)
+print("Objects Detected :", count)
+print("Output Image:", output_path)
+
+if success:
+    print("Experiment 39 completed successfully.")
+else:
+    print("Error: Could not save output.")
+
+print("----------------------------------------")

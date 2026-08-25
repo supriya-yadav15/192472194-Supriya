@@ -1,0 +1,50 @@
+import cv2
+import numpy as np
+import os
+
+# -----------------------------------------
+# Create output folder automatically
+# -----------------------------------------
+output_folder = "outputs"
+os.makedirs(output_folder, exist_ok=True)
+
+# -----------------------------------------
+# Read input image
+# -----------------------------------------
+image = cv2.imread("flower.jpeg", cv2.IMREAD_GRAYSCALE)
+
+if image is None:
+    print("Error: flower.jpeg not found!")
+    exit()
+
+# -----------------------------------------
+# Boundary detection convolution kernel
+# -----------------------------------------
+kernel = np.array([
+    [-1, -1, -1],
+    [-1,  8, -1],
+    [-1, -1, -1]
+])
+
+# -----------------------------------------
+# Apply convolution
+# -----------------------------------------
+boundary = cv2.filter2D(image, -1, kernel)
+
+# -----------------------------------------
+# Save output image
+# -----------------------------------------
+output_path = "outputs/exp28_boundary_detection.jpg"
+
+cv2.imwrite(output_path, boundary)
+
+# -----------------------------------------
+# Display result in terminal
+# -----------------------------------------
+print("----------------------------------------")
+print("Experiment 28: Boundary Detection")
+print("----------------------------------------")
+print("Input Image : flower.jpeg")
+print("Output Image:", output_path)
+print("Experiment 28 completed successfully.")
+print("----------------------------------------")
